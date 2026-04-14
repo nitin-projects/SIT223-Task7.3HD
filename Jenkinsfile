@@ -56,9 +56,9 @@ pipeline {
         stage('7. Monitoring') {
             steps {
                 echo 'Pinging Health Endpoints...'
-                // Windows command to wait for 10 seconds so Docker container can start
-                bat 'timeout /t 10 /nobreak' 
-                // Ping the server
+                // Jenkins ki native sleep command (10 seconds wait karegi)
+                sleep time: 10, unit: 'SECONDS'
+                // Ping the server to check if it's active
                 bat 'curl -f http://localhost:5000/health'
             }
         }
