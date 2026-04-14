@@ -78,7 +78,7 @@ pipeline {
         always {
             echo 'Pipeline finished. Cleaning up environment...'
             // Tears down the staging environment and frees up system resources, regardless of pass/fail
-         //   bat 'docker-compose down'
+          bat 'docker-compose down'
         }
     }
 }
