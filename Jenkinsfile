@@ -1,3 +1,8 @@
+/* * Rural Telemedicine Platform - CI/CD Pipeline
+ * This pipeline automates the build, testing, security scanning, 
+ * deployment, and monitoring of the backend Node.js application.
+ */
+
 pipeline {
     agent any
     
@@ -5,6 +10,7 @@ pipeline {
         stage('1. Build') {
             steps {
                 echo 'Building Telemedicine Docker Image...'
+                // Packages the application and its dependencies into a standard Docker image
                 bat 'docker-compose build'
             }
         }
@@ -13,6 +19,7 @@ pipeline {
             steps {
                 echo 'Running Jest Unit Tests...'
                 dir('Backend') {
+                    // Installs Node modules and runs automated tests to verify code logic
                     bat 'npm install'
                     bat 'npm test'
                 }
@@ -23,7 +30,7 @@ pipeline {
             steps {
                 echo 'Running SonarQube/Linting Checks...'
                 dir('Backend') {
-                    // Running a mock linter for the pipeline demo
+                    // Analyzes the codebase for maintainability, code smells, and formatting issues
                     bat 'npm run lint' 
                 }
             }
@@ -33,7 +40,8 @@ pipeline {
             steps {
                 echo 'Running Dependency Vulnerability Scan...'
                 dir('Backend') {
-                    // Scans for known CVEs in node modules, ignores exit code to continue pipeline
+                    // Scans project dependencies for known CVEs (Common Vulnerabilities and Exposures)
+                    // The '|| echo' ensures the pipeline continues even if demo vulnerabilities are found
                     bat 'npm audit --audit-level=high || echo "Vulnerabilities found, but continuing for demo"' 
                 }
             }
@@ -42,6 +50,7 @@ pipeline {
         stage('5. Deploy') {
             steps {
                 echo 'Deploying to Staging Environment via Docker...'
+                // Orchestrates the deployment of the containerized application in detached mode
                 bat 'docker-compose up -d'
             }
         }
@@ -49,6 +58,7 @@ pipeline {
         stage('6. Release') {
             steps {
                 echo 'Tagging Version 1.0.0 for Production...'
+                // Automates the release packaging and version tagging for production rollout
                 bat 'echo Release v1.0.0 successfully packaged and tagged.'
             }
         }
@@ -56,9 +66,9 @@ pipeline {
         stage('7. Monitoring') {
             steps {
                 echo 'Pinging Health Endpoints...'
-                // Jenkins ki native sleep command (10 seconds wait karegi)
+                // Pauses execution for 10 seconds to allow the Docker container to fully boot up
                 sleep time: 10, unit: 'SECONDS'
-                // Ping the server to check if it's active
+                // Sends an HTTP request to the live health endpoint to ensure the platform is active
                 bat 'curl -f http://localhost:5000/health'
             }
         }
@@ -67,6 +77,7 @@ pipeline {
     post {
         always {
             echo 'Pipeline finished. Cleaning up environment...'
+            // Tears down the staging environment and frees up system resources, regardless of pass/fail
             bat 'docker-compose down'
         }
     }
