@@ -1,12 +1,16 @@
 import React from 'react';
+// Import the VideoConsent component for the video call feature
 import VideoConsent from './VideoConsent'; 
 
 function App() {
   return (
     <div>
-      <h1 style={{ textAlign: 'center', fontFamily: 'sans-serif' }}>Rural Telemedicine Platform</h1>
+      {/* Main Application Header */}
+      <h1 style={{ textAlign: 'center', fontFamily: 'sans-serif', marginTop: '20px' }}>
+        Rural Telemedicine Platform
+      </h1>
       
-      {/* Yahan hum apne naye component ko screen par bula rahe hain */}
+      {/* Render the VideoConsent component to handle patient consent and video room access */}
       <VideoConsent />
       
     </div>
