@@ -1,0 +1,73 @@
+import React, { useState } from 'react';
+
+const VideoConsent = () => {
+  const [isConsentGranted, setIsConsentGranted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Backend API ko call karne ka function
+  const handleConsentAccept = async () => {
+    setLoading(true);
+    try {
+      // Backend ko request bhej rahe hain (appointment ID 123 assume karke)
+      const response = await fetch('http://localhost:5000/api/appointments/123/consent', {
+        method: 'POST',
+      });
+      
+      if (response.ok) {
+        setIsConsentGranted(true);
+        alert("Consent Recorded! Redirecting to Video Room...");
+        // Yahan se aap user ko asli WebRTC video call screen par bhej sakte hain
+      }
+    } catch (error) {
+      console.error("Error recording consent:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Agar consent mil gaya hai, toh Video Call UI dikhayein
+  if (isConsentGranted) {
+    return (
+      <div style={{ textAlign: 'center', padding: '50px' }}>
+        <h2>🎥 Live Video Consultation Room</h2>
+        <p>Connecting to Dr. Nitin...</p>
+        {/* Yahan aapka WebRTC ya Twilio ka camera component aayega */}
+        <div style={{ width: '600px', height: '400px', background: '#000', margin: '0 auto', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            Camera Active
+        </div>
+      </div>
+    );
+  }
+
+  // Agar consent nahi mila hai, toh Waiting Room / Consent Modal dikhayein
+  return (
+    <div style={{ padding: '40px', maxWidth: '600px', margin: '0 auto', fontFamily: 'sans-serif' }}>
+      <h2>Waiting Room</h2>
+      <div style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '8px', background: '#f9f9f9' }}>
+        <h3>Patient Consent Required</h3>
+        <p>Before initiating the video call, please review the following:</p>
+        <ul>
+          <li>This call will be encrypted end-to-end to protect your medical privacy.</li>
+          <li>Your audio and video will be shared with the consulting doctor.</li>
+          <li>A digital record of your consent will be stored in our database.</li>
+        </ul>
+        <p>Do you agree to proceed with the video consultation?</p>
+        
+        <button 
+          onClick={handleConsentAccept} 
+          disabled={loading}
+          style={{ background: '#4CAF50', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer', marginRight: '10px' }}
+        >
+          {loading ? "Recording..." : "I Agree - Join Call"}
+        </button>
+        <button 
+          style={{ background: '#f44336', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default VideoConsent;
