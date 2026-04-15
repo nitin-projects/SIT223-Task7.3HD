@@ -11,7 +11,17 @@ app.get('/health', (req, res) => {
 app.get('/api/appointments', (req, res) => {
     res.status(200).json([{ doctor: 'Dr. Nitin', time: '10:00 AM', status: 'Booked' }]);
 });
+// Video Call Consent Endpoint
+app.post('/api/appointments/:id/consent', (req, res) => {
+    const appointmentId = req.params.id;
 
+    res.status(200).json({
+        message: "Consent successfully recorded.",
+        appointmentId: appointmentId,
+        videoConsentGranted: true,
+        timestamp: new Date()
+    });
+});
 if (require.main === module) {
     app.listen(PORT, () => console.log(`Telemedicine API running on port ${PORT}`));
 }
