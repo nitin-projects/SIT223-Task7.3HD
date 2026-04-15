@@ -86,7 +86,7 @@ pipeline {
             echo 'Pipeline finished. Cleaning up environment...'
             // Tears down the staging environment and frees up system resources, regardless of pass/fail
             // Video record karne ke liye aap is line ko temporarily comment (//) kar sakte hain
-            bat 'docker-compose down'
+            // bat 'docker-compose down'
         }
     }
 }
