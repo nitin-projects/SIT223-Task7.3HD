@@ -6,6 +6,13 @@
 pipeline {
     agent any
     
+    // Jenkins apne secure vault (Credentials Manager) se Twilio keys nikal raha hai
+    environment {
+        TWILIO_ACCOUNT_SID = credentials('TWILIO_ACCOUNT_SID')
+        TWILIO_API_KEY = credentials('TWILIO_API_KEY')
+        TWILIO_API_SECRET = credentials('TWILIO_API_SECRET')
+    }
+    
     stages {
         stage('1. Build') {
             steps {
@@ -78,7 +85,8 @@ pipeline {
         always {
             echo 'Pipeline finished. Cleaning up environment...'
             // Tears down the staging environment and frees up system resources, regardless of pass/fail
-          bat 'docker-compose down'
+            // Video record karne ke liye aap is line ko temporarily comment (//) kar sakte hain
+            bat 'docker-compose down'
         }
     }
 }
